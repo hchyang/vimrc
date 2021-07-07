@@ -1,0 +1,120 @@
+set incsearch
+set hlsearch
+set nocp
+
+set number
+set ruler
+set cursorline
+set cursorcolumn
+
+"set colorcolumn=80
+
+"if has('mouse')
+"    set mouse=a
+"endif
+"
+
+set backspace=indent,eol,start
+set smartindent
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+set ignorecase
+set smartcase
+
+set wrap
+
+" set syntax highlighting
+syntax on
+" colorscheme elflord
+
+filetype on
+
+autocmd BufNewFile *.sh,*.pl,*.pm,*.py,*.R,*.r exec ":call SetTitle()"
+autocmd BufNewFile * normal G
+
+func SetTitle()
+    if &filetype == 'perl'
+        call setline(1, "\#!/usr/bin/perl")
+        call append(line("."), "")
+        call append(line(".")+1, "\#########################################################################")
+        call append(line(".")+2, "\# Author: Hechuan Yang")
+        call append(line(".")+3, "\# Created Time: ".strftime("%Y-%m-%d %T"))
+        call append(line(".")+4, "\# File Name: ".expand("%"))
+        call append(line(".")+5, "\# Description: ")
+        call append(line(".")+6, "\#########################################################################")
+        call append(line(".")+7, "")
+        call append(line(".")+8, "use strict;")
+        call append(line(".")+9, "use warnings;")
+        call append(line(".")+10, "")
+        call append(line(".")+11, "")
+    elseif &filetype == 'python'
+        call setline(1, "\#!/usr/bin/env python3")
+        call append(line("."), "")
+        call append(line(".")+1, "\#########################################################################")
+        call append(line(".")+2, "\# Author: Hechuan Yang")
+        call append(line(".")+3, "\# Created Time: ".strftime("%Y-%m-%d %T"))
+        call append(line(".")+4, "\# File Name: ".expand("%"))
+        call append(line(".")+5, "\# Description: ")
+        call append(line(".")+6, "\#########################################################################")
+        call append(line(".")+7, "")
+        call append(line(".")+8, "import os")
+        call append(line(".")+9, "import sys")
+        call append(line(".")+10, "import argparse")
+        call append(line(".")+11, "#handle the error like below")
+        call append(line(".")+12, "#python | head == IOError: [Errno 32] Broken pipe")
+        call append(line(".")+13, "from signal import signal, SIGPIPE, SIG_DFL")
+        call append(line(".")+14, "signal(SIGPIPE,SIG_DFL)")
+        call append(line(".")+15, "")
+        call append(line(".")+16, "#parser=argparse.ArgumentParser(description='')")
+        call append(line(".")+17, "#parser.add_argument('-x','--xx',type=str,required=True,help='')")
+        call append(line(".")+18, "#args=parser.parse_args()")
+        call append(line(".")+19, "")
+    elseif &filetype == 'r'
+        call setline(1, "\#!/usr/bin/env Rscript")
+        call append(line("."), "")
+        call append(line(".")+1, "\#########################################################################")
+        call append(line(".")+2, "\# Author: Hechuan Yang")
+        call append(line(".")+3, "\# Created Time: ".strftime("%Y-%m-%d %T"))
+        call append(line(".")+4, "\# File Name: ".expand("%"))
+        call append(line(".")+5, "\# Description: ")
+        call append(line(".")+6, "\#########################################################################")
+        call append(line(".")+7, "")
+        call append(line(".")+8, "")
+    else
+        call setline(1, "\#!/bin/bash")
+        call append(line("."), "#PBS -S /bin/bash")
+        call append(line(".")+1, "##PBS -P urgent")
+        call append(line(".")+2, "#PBS -pe smp 1")
+        call append(line(".")+3, "#PBS -l mf=4g")
+        call append(line(".")+4, "#PBS -l walltime=72:00:00")
+        call append(line(".")+5, "")
+        call append(line(".")+6, "\#########################################################################")
+        call append(line(".")+7, "\# Author: Hechuan Yang")
+        call append(line(".")+8, "\# Created Time: ".strftime("%Y-%m-%d %T"))
+        call append(line(".")+9, "\# File Name: ".expand("%"))
+        call append(line(".")+10, "\# Description: ")
+        call append(line(".")+11, "\#########################################################################")
+        call append(line(".")+12, "")
+        call append(line(".")+13, "set -e")
+        call append(line(".")+14, "set -u")
+        call append(line(".")+15, "set -o pipefail")
+        call append(line(".")+16, "")
+        call append(line(".")+17, "#shdir=")
+        call append(line(".")+18, "#wkdir=")
+        call append(line(".")+19, "#cd $wkdir")
+        call append(line(".")+20, '#snakemake -j 50 -k --latency-wait 180 --rerun-incomplete --configfile config.yaml --cluster-config cluster.yaml \')
+        call append(line(".")+21, '#    --cluster "qsub -V -q {cluster.queue} -l mem={cluster.mem} -l nodes=1:ppn={cluster.cpu} -l walltime={cluster.time} -o $shdir -e $shdir" \')
+        call append(line(".")+22, '#    -d $PWD -s Snakefile')
+        call append(line(".")+23, '#arrayjob: qsub -t 1-N job.sh # PBS_ARRAYID # qstat -t ')
+        call append(line(".")+24, '')
+    endif
+endfunc
+
+au BufNewFile,BufRead Snakefile set syntax=snakemake
+au BufNewFile,BufRead *.rules set syntax=snakemake
+au BufNewFile,BufRead *.snakefile set syntax=snakemake
+au BufNewFile,BufRead *.snake set syntax=snakemake
+"autocmd FileType python match Underlined /\%>79v.*/
+
