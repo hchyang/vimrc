@@ -6,6 +6,8 @@ set number
 set ruler
 set cursorline
 set cursorcolumn
+"highlight CursorColumn guibg=#404040
+highlight CursorColumn ctermfg=White ctermbg=Yellow cterm=bold guifg=white guibg=yellow gui=bold
 
 "set colorcolumn=80
 
